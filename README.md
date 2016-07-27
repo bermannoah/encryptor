@@ -1,2 +1,2 @@
 # encryptor
-part of the turing school rework
+part of the turing school prework
