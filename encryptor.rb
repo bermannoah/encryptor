@@ -56,25 +56,33 @@ class Encryptor
     end
   end
 
-password = File.open("encryptor_password.txt", "r")
+password = File.open("encryptor_password.rb", "r")
 password.read
 
 
-  if File.zero?("encryptor_password.txt")         # checks to see if the password file is empty
+  if File.zero?("encryptor_password.rb")         # checks to see if the password file is empty
     puts "Add a password to use this application > "
       password_new = gets.chomp
-        security = File.open("encryptor_password.txt", "w")
+        security = File.open("encryptor_password.rb", "w")
         security.write(password_new)
         security.close
         e = Encryptor.new
-        e.encrypt_file("encryptor_password.txt", 2048)
+        e.encrypt_file("encryptor_password.rb", 2048)
   else
     puts "Enter password to login > "
       login = gets.chomp
+        check_pass = File.open("check_pass.rb", "w")
+        check_pass.write(login)
+        check_pass.close
         e = Encryptor.new
-        e.decrypt_file("encryptor_password.txt", 2048)
-        checker = File.open("encryptor_password.txt", "r")
-          if login == checker
+        e.encrypt_file("check_pass.rb", 2048).to_s
+
+          checker = File.open("check_pass.rb", "r")
+          original = File.open("encryptor_password.rb", "r")
+          p1 = checker.read.to_s
+          p2 = original.read.to_s
+          if p1 == p2
+            check_pass.write("")
             puts "Enter 1 to encrypt or 2 to decrypt."          # code to make the program more user friendly
               selection = gets.chomp.to_i
 
