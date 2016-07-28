@@ -1,23 +1,19 @@
 class Encryptor
-  def cipher                            # letter hash for ROT-13 cipher
-    {'a' => 'n', 'b' => 'o', 'c' => 'p', 'd' => 'q',
-     'e' => 'r', 'f' => 's', 'g' => 't', 'h' => 'u',
-     'i' => 'v', 'j' => 'w', 'k' => 'x', 'l' => 'y',
-     'm' => 'z', 'n' => 'a', 'o' => 'b', 'p' => 'c',
-     'q' => 'd', 'r' => 'e', 's' => 'f', 't' => 'g',
-     'u' => 'h', 'v' => 'i', 'w' => 'j', 'x' => 'k',
-     'y' => 'l', 'z' => 'm'}
+  def cipher(rotation)                            # letter hash for ROT-13 cipher
+    characters = (' '..'z').to_a
+    rotated_characters = characters.rotate(rotation)
+    Hash[characters.zip(rotated_characters)]
    end
 
-   def encrypt_letter(letter)           # just encrypts one letter
-     lowercase_letter = letter.downcase
-     cipher[lowercase_letter]
+   def encrypt_letter(letter,rotation)
+     cipher_for_rotation = cipher(rotation)
+     cipher_for_rotation[letter]
    end
 
-   def encrypt(string)                  # encrypts a string
+   def encrypt(string,rotation)                  # encrypts a string
      letters = string.split("")
      results = letters.collect do |letter|
-       encrypted_letter = encrypt_letter(letter)
+       encrypted_letter = encrypt_letter(letter,rotation)
    end
      results.join                     # joins encrypted array as a string
 end
