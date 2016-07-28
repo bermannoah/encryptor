@@ -26,5 +26,12 @@ end
     end
     decrypted_results.join            # outputs decrypted string
 end
-
+    def encrypt_file(filename, rotation)
+      input = File.open(filename, "r")  # opens file
+      clear_text = input.read           # reads file into cleartext
+      cipher_text = encrypt(clear_text, rotation) # encrypts clear text with rotation parameter
+      output = File.open(filename + ".encrypted", "w") # creates file for encrypted text
+      output.write(cipher_text) # writes cipher text to new file
+      output.close   # closes file
+end
 end
