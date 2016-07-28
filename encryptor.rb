@@ -21,4 +21,13 @@ class Encryptor
    end
      results.join                     # joins encrypted array as a string
 end
+
+  def decrypt(string)                 # decrypts an encrypted string using encrypt
+    letters = string.split("")
+    decrypted_results = letters.collect do |letter|
+      decrypted_letter = encrypt_letter(letter)
+    end
+    decrypted_results.join            # outputs decrypted string
+end
+
 end
