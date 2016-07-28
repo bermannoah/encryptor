@@ -16,11 +16,9 @@ class Encryptor
 
    def encrypt(string)                  # encrypts a string
      letters = string.split("")
-     results = []
-     letters.each do |letter|
+     results = letters.collect do |letter|
        encrypted_letter = encrypt_letter(letter)
-       results.push(encrypted_letter)
    end
-      results.join                     # joins encrypted array as a string
+     results.join                     # joins encrypted array as a string
 end
 end
