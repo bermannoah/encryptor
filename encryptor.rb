@@ -45,4 +45,14 @@ class Encryptor
       what_it_says.write(not_code_language) # writes decrypted info to new file
       what_it_says.close  # closes that file
     end
+
+  def supported_characters
+    (' '..'z').to_a
+  end
+
+  def crack(message)
+    supported_characters.count.times.collect do |attempt|
+      decrypt(message, attempt)
+    end
+  end
 end
