@@ -55,24 +55,46 @@ class Encryptor
       decrypt(message, attempt)
     end
   end
-end
 
-puts "Enter 1 to encrypt or 2 to decrypt."          # code to make the program more functional
+password_file = File.open("encryptor_password.txt", "r")
+password_file.read
 
-if selection == 1
-  puts "Enter text to be encrypted > "
-    string = gets.chomp
-  puts "Enter rotation number > "
-    rotation = gets.chomp.to_i
-  e = Encryptor.new
-  puts e.encrypt(string, rotation)
-elsif selection == 2
-  puts "Enter text to be decrypted > "
-    string = gets.chomp
-  puts "Enter rotation number > "
-    rotation = gets.chomp.to_i
-  e = Encryptor.new
-  puts e.decrypt(string, rotation)
+if password_file == "no password\n"
+  puts "Add a password to use this application > "
+    password = gets.chomp
+      e = Encryptor.new
+        saved_password = e.encrypt(password, 2048)
+        security = File.open(password_file, "w")
+        security.write(saved_password)
+        security.close
 else
-  puts "Please enter 1 or 2."
+  puts "Enter password to login > "
+    login = gets.chomp
+    e = Encryptor.new
+        checker = decrypt_file(password_file, 2048)
+    if checker != login
+      puts "Your password was entered incorrectly. Try again."
+    else
+      puts "Enter 1 to encrypt or 2 to decrypt."          # code to make the program more user friendly
+        selection = gets.chomp.to_i
+
+        if selection == 1
+          puts "Enter text to be encrypted > "
+            string = gets.chomp
+          puts "Enter rotation number > "
+            rotation = gets.chomp.to_i
+          e = Encryptor.new
+          puts e.encrypt(string, rotation)
+        elsif selection == 2
+          puts "Enter text to be decrypted > "
+            string = gets.chomp
+          puts "Enter rotation number > "
+            rotation = gets.chomp.to_i
+          e = Encryptor.new
+          puts e.decrypt(string, rotation)
+        else
+          puts "Please enter 1 or 2."
+      end
+    end
+end
 end
