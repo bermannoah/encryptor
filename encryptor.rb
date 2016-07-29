@@ -81,12 +81,17 @@ password.read
           original = File.open("encryptor_password.rb", "r")
           p1 = checker.read.to_s
           p2 = original.read.to_s
+
+          loop do
+            if p1 != p2
+            puts "Incorrect password entry. Try again." # error message if a bad pw is entered.
+            break   # need to have some kind of "entry count" lockout here. will do later.
+          end
+
           if p1 == p2
-            check_pass.write("")
+            check_pass.write("")              # clears password entry file to "prevent" decryption
             puts "Enter 1 to encrypt or 2 to decrypt. Enter 'finished' when you are done."          # code to make the program more user friendly
               selection = gets.chomp.to_i
-
-
 
               if selection == 1
 
@@ -125,3 +130,4 @@ password.read
           end
         end
       end
+end
