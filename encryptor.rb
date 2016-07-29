@@ -60,46 +60,63 @@ password = File.open("encryptor_password.rb", "r")
 password.read
 
 
-  if File.zero?("encryptor_password.rb")         # checks to see if the password file is empty
+  if File.zero?(password)         # checks to see if the password file is empty
     puts "Add a password to use this application > "
-      password_new = gets.chomp
+      password_new = gets.chomp                  # asks for and then encrypts a new password
         security = File.open("encryptor_password.rb", "w")
         security.write(password_new)
         security.close
         e = Encryptor.new
-        e.encrypt_file("encryptor_password.rb", 2048)
-  else
+        e.encrypt_file("encryptor_password.rb", 4096)
+  else                                          # if there IS a password, use this to access encrypt/decrypt
     puts "Enter password to login > "
       login = gets.chomp
         check_pass = File.open("check_pass.rb", "w")
         check_pass.write(login)
         check_pass.close
         e = Encryptor.new
-        e.encrypt_file("check_pass.rb", 2048).to_s
+        e.encrypt_file("check_pass.rb", 4096).to_s
 
-          checker = File.open("check_pass.rb", "r")
+          checker = File.open("check_pass.rb", "r")           # checks to see if password entered matches existing pw
           original = File.open("encryptor_password.rb", "r")
           p1 = checker.read.to_s
           p2 = original.read.to_s
           if p1 == p2
             check_pass.write("")
-            puts "Enter 1 to encrypt or 2 to decrypt."          # code to make the program more user friendly
+            puts "Enter 1 to encrypt or 2 to decrypt. Enter 'finished' when you are done."          # code to make the program more user friendly
               selection = gets.chomp.to_i
 
+
+
               if selection == 1
-                puts "Enter text to be encrypted > "
-                  string = gets.chomp
-                puts "Enter rotation number > "
-                  rotation = gets.chomp.to_i
-                e = Encryptor.new
-                puts e.encrypt(string, rotation)
+
+                loop do
+                  puts "Enter text to be encrypted > "
+                    string = gets.chomp
+                    if string == "finished"
+                      puts "Exiting...done."            # allows continual encryption
+                      break
+                    end
+                  puts "Enter rotation number > "
+                    rotation = gets.chomp.to_i
+                  e = Encryptor.new
+                  puts e.encrypt(string, rotation)
+              end
+
               elsif selection == 2
-                puts "Enter text to be decrypted > "
-                  string = gets.chomp
-                puts "Enter rotation number > "
-                  rotation = gets.chomp.to_i
-                e = Encryptor.new
-                puts e.decrypt(string, rotation)
+
+                loop do
+                  puts "Enter text to be decrypted > "
+                    string = gets.chomp
+                    if string == "finished"         # allows continual decryption
+                      puts "Exiting...done."
+                      break
+                    end
+                  puts "Enter rotation number > "
+                    rotation = gets.chomp.to_i
+                  e = Encryptor.new
+                  puts e.decrypt(string, rotation)
+                end
               else
                 puts "Please enter 1 or 2."
             end
