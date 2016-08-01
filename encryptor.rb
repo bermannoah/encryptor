@@ -56,6 +56,8 @@ class Encryptor
     end
   end
 
+################## user access stuff ends up here. one day i will learn how to divide this into different files :)
+
 password = File.open("encryptor_password.rb", "r")
 password.read
 
@@ -82,52 +84,49 @@ password.read
           p1 = checker.read.to_s
           p2 = original.read.to_s
 
-          loop do
-            if p1 != p2
+
+          if p1 != p2
             puts "Incorrect password entry. Try again." # error message if a bad pw is entered.
-            break   # need to have some kind of "entry count" lockout here. will do later.
-          end
-
-          if p1 == p2
-            check_pass.write("")              # clears password entry file to "prevent" decryption
-            puts "Enter 1 to encrypt or 2 to decrypt. Enter 'finished' when you are done."          # code to make the program more user friendly
-              selection = gets.chomp.to_i
-
-              if selection == 1
-
-                loop do
-                  puts "Enter text to be encrypted > "
-                    string = gets.chomp
-                    if string == "finished"
-                      puts "Exiting...done."            # allows continual encryption
-                      break
-                    end
-                  puts "Enter rotation number > "
-                    rotation = gets.chomp.to_i
-                  e = Encryptor.new
-                  puts e.encrypt(string, rotation)
-              end
-
-              elsif selection == 2
-
-                loop do
-                  puts "Enter text to be decrypted > "
-                    string = gets.chomp
-                    if string == "finished"         # allows continual decryption
-                      puts "Exiting...done."
-                      break
-                    end
-                  puts "Enter rotation number > "
-                    rotation = gets.chomp.to_i
-                  e = Encryptor.new
-                  puts e.decrypt(string, rotation)
-                end
-              else
-                puts "Please enter 1 or 2."
-            end
           else
-            puts "Your password was entered incorrectly. Try again."
+
+
+              e = Encryptor.new
+              puts "Enter 1 to encrypt or 2 to decrypt. Enter 'finished' when you are done."          # code to make the program more user friendly
+                selection = gets.chomp.to_i
+
+                if selection == 1
+
+                   loop do
+                    puts "Enter text to be encrypted > "
+                      string = gets.chomp
+                      if string == "finished"
+                        puts "Exiting...done."            # allows continual encryption
+                        break
+                      end
+                    puts "Enter rotation number > "
+                      rotation = gets.chomp.to_i
+                    puts e.encrypt(string, rotation)
+                end
+
+                elsif selection == 2
+
+                  loop do
+                    puts "Enter text to be decrypted > "
+                      string = gets.chomp
+                      if string == "finished"         # allows continual decryption
+                        puts "Exiting...done."
+                        break
+                      end
+                    puts "Enter rotation number > "
+                      rotation = gets.chomp.to_i
+                    puts e.decrypt(string, rotation)
+                  end
+
+
+                else
+                  puts "Exiting program...done."
+
+                end
+              end
+            end
           end
-        end
-      end
-end
