@@ -1,26 +1,38 @@
 class Cipher
 
-  def cipher(rotation)
+  attr_reader :characters, :rotated_characters
+
+  def initialize(characters, rotated_characters)
+    @characters = characters
+    @rotated_characters = rotated_characters
+  end
+
+  def rot(rotation)
     characters = (' '..'z').to_a
     rotated_characters = characters.rotate(rotation)
     Hash[characters.zip(rotated_characters)]
   end
-
 end
 
-class Encryptor
+class Encryptor < Cipher
 
-   def encrypt_letter(letter, rotation)
-     c = Cipher.new
-     cipher_for_rotation = c(rotation)
-     cipher_for_rotation[letter]
-   end
+  attr_reader :letter, :rotation
+  def initialize
+    @letter = letter
+    @rotation = rotation
+  end
+
+
+  def encrypt_letter(letter, rotation)
+    # cipher = @rot
+    cipher_for_rotation = rot(rotation)
+    cipher_for_rotation[letter]
+  end
 
    def encrypt(string, rotation)                  # encrypts a string
      letters = string.split("")
-     c = Cipher.new
      results = letters.collect do |letter|
-     encrypted_letter = encrypt_letter(letter, rotation)
+     encrypted_letter = encrypt_letter(@letter, @rotation)
    end
      results.join                     # joins encrypted array as a string
   end
@@ -34,9 +46,9 @@ class Encryptor
       output.close   # closes file
   end
 
-end
 
-class Decryptor
+
+class Decryptor < Cipher
 
   def decrypt(string, rotation)                 # decrypts an encrypted string using encrypt
 
@@ -65,24 +77,27 @@ class Decryptor
 end
 
 
-# The following are easily-used ways of accessing the above classes and methods.
+# The following are ways of accessing the above classes and methods.
 
 puts "Enter 1 for encrypting or 2 for decrypting."
 puts "To exit the program, type 'finished'. "
 
-  class Encrypting
+  class Encrypting < Encryptor
 
     e = Encryptor.new
-    string = ""
+    string = " "
 
     until string == "finished"
       puts "Enter text to be encrypted or type 'finished' to exit > "
         string = gets.chomp.to_s
       puts "Enter rotation number > "
         rotation = gets.chomp.to_i
-      result = puts e.encrypt(string, rotation)
-      puts result
+        # e = Encryptor.new(string, rotation)
+      e = Encryptor.new
+      puts e.encrypt(string, rotation)
     end
+
+
 
 
 
@@ -111,4 +126,5 @@ puts "To exit the program, type 'finished'. "
   else
     "Exiting...done."
   end
+end
 end
