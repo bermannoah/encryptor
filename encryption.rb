@@ -36,67 +36,50 @@ class Encryptor < Cipher
    end
      results.join                     # joins encrypted array as a string
   end
-
-  def encrypt_file(filename, rotation)
-      input = File.open(filename, "r")  # opens file
-      clear_text = input.read           # reads file into cleartext
-      cipher_text = encrypt(clear_text, rotation) # encrypts clear text with rotation parameter
-      output = File.open(filename, "w") # creates file for encrypted text
-      output.write(cipher_text) # writes cipher text to new file
-      output.close   # closes file
-  end
 end
 
 
-class Decryptor < Cipher
-  def decrypt(string, rotation)                 # decrypts an encrypted string using encrypt
+class Decryptor < Encryptor
 
-    attr_reader :letter, :rotation
+      attr_reader :letter, :rotation
       def initialize
         @letter = letter
         @rotation = rotation
       end
 
-    def decrypt(string, rotation)
-      e = Encryptor.new
-      x = (0 - rotation).to_i
-      letters = string.split("")
-      decrypted_results = letters.collect do |letter|
-      decrypted_letter = e.encrypt_letter(letter, x)
-    end
-      decrypted_results.join            # outputs decrypted string
-  end
-
-  def decrypt_file(filename, rotation)
-      input = File.open(filename, "r")  # opens file
-      code_language = input.read    # reads gibberish
-      not_code_language = decrypt(code_language, rotation)  # decrypts gibberish
-      what_it_says = File.open(filename, "w") # creates a new file and changes encrypted to decrypted
-      what_it_says.write(not_code_language) # writes decrypted info to new file
-      what_it_says.close  # closes that file
+      def decrypt(string, rotation)
+        x = (0 - rotation).to_i
+        letters = string.split("")
+        decrypted_results = letters.collect do |letter|
+        decrypted_letter = encrypt_letter(letter, x)
+      end
+        decrypted_results.join            # outputs decrypted string
   end
 end
 
 
 # The following are ways of accessing the above classes and methods.
 
-puts "Enter 1 for encrypting or 2 for decrypting."
-puts "To exit the program, type 3. "
+class Application
+
+  puts "Enter 1 for encrypting or 2 for decrypting."
+  puts "To exit the program, type 3. "
 
   selection = gets.chomp.to_i
 
+  attr_reader :encrypting, :decrypting
   def initialize
     @encrypting = Encrypting.new
     @decrypting = Decrypting.new
   end
 
   if selection == 1
-    encrypting = @encrypting
+      @encrypting
   elsif selection == 2
-    decrypting = @decrypting
+      @decrypting
   else
-    puts "Exiting program...done."
-    exit
+      puts "Exiting program...done."
+      exit
   end
 
   class Encrypting
@@ -115,7 +98,7 @@ puts "To exit the program, type 3. "
         puts "Exiting program...done."
         exit
     end
-  end
+
 
 
   class Decrypting
@@ -134,3 +117,4 @@ puts "To exit the program, type 3. "
       puts "Exiting program...done."
       exit
     end
+end
