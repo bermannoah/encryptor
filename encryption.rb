@@ -45,27 +45,26 @@ class Encryptor < Cipher
       output.write(cipher_text) # writes cipher text to new file
       output.close   # closes file
   end
-
+end
 
 
 class Decryptor < Cipher
-
   def decrypt(string, rotation)                 # decrypts an encrypted string using encrypt
 
     attr_reader :letter, :rotation
-    def initialize
-      @letter = letter
-      @rotation = rotation
+      def initialize
+        @letter = letter
+        @rotation = rotation
+      end
+
+    def decrypt(string, rotation)
+      e = Encryptor.new
+      x = (0 - rotation).to_i
+      letters = string.split("")
+      decrypted_results = letters.collect do |letter|
+      decrypted_letter = e.encrypt_letter(letter, x)
     end
-
-    x = (0 - rotation).to_i
-    letters = string.split("")
-    decrypted_results = letters.collect do |letter|
-      decrypted_letter = encrypt_letter(letter, x)
-  end
-
-    decrypted_results.join            # outputs decrypted string
-
+      decrypted_results.join            # outputs decrypted string
   end
 
   def decrypt_file(filename, rotation)
@@ -76,7 +75,6 @@ class Decryptor < Cipher
       what_it_says.write(not_code_language) # writes decrypted info to new file
       what_it_says.close  # closes that file
   end
-
 end
 
 
@@ -87,16 +85,19 @@ puts "To exit the program, type 3. "
 
   selection = gets.chomp.to_i
 
-
-  if selection == 1
-    @encrypting
-  elsif selection == 2
-    @decrypting
-  else
-    puts "Exiting program...done."
+  def initialize
+    @encrypting = Encrypting.new
+    @decrypting = Decrypting.new
   end
 
-
+  if selection == 1
+    encrypting = @encrypting
+  elsif selection == 2
+    decrypting = @decrypting
+  else
+    puts "Exiting program...done."
+    exit
+  end
 
   class Encrypting
 
@@ -112,9 +113,10 @@ puts "To exit the program, type 3. "
         puts e.encrypt(string, rotation)
       end
         puts "Exiting program...done."
+        exit
     end
-
   end
+
 
   class Decrypting
 
@@ -130,10 +132,5 @@ puts "To exit the program, type 3. "
         puts d.decrypt(string, rotation)
       end
       puts "Exiting program...done."
+      exit
     end
-  
-
-
-
-
-# end
