@@ -1,12 +1,18 @@
-class Encryptor
+class Cipher
+
   def cipher(rotation)                            # letter hash for ROT-13 cipher
     characters = (' '..'z').to_a
     rotated_characters = characters.rotate(rotation)
     Hash[characters.zip(rotated_characters)]
    end
+ end
+
+
+class Encryptor
 
    def encrypt_letter(letter, rotation)
-     cipher_for_rotation = cipher(rotation)
+     c = Cipher.new
+     cipher_for_rotation = c.rotation
      cipher_for_rotation[letter]
    end
 
@@ -18,16 +24,6 @@ class Encryptor
      results.join                     # joins encrypted array as a string
   end
 
-  def decrypt(string, rotation)                 # decrypts an encrypted string using encrypt
-    x = (0 - rotation).to_i
-    letters = string.split("")
-    decrypted_results = letters.collect do |letter|
-      decrypted_letter = encrypt_letter(letter, x)
-    end
-    decrypted_results.join            # outputs decrypted string
-    end
-
-
   def encrypt_file(filename, rotation)
       input = File.open(filename, "r")  # opens file
       clear_text = input.read           # reads file into cleartext
@@ -37,6 +33,17 @@ class Encryptor
       output.close   # closes file
   end
 
+class Decryptor
+
+  def decrypt(string, rotation)                 # decrypts an encrypted string using encrypt
+    x = (0 - rotation).to_i
+    letters = string.split("")
+    decrypted_results = letters.collect do |letter|
+      decrypted_letter = encrypt_letter(letter, x)
+    end
+    decrypted_results.join            # outputs decrypted string
+    end
+
   def decrypt_file(filename, rotation)
       input = File.open(filename, "r")  # opens file
       code_language = input.read    # reads gibberish
@@ -45,6 +52,10 @@ class Encryptor
       what_it_says.write(not_code_language) # writes decrypted info to new file
       what_it_says.close  # closes that file
     end
+  end
+
+
+class Cracker
 
   def supported_characters
     (' '..'z').to_a
@@ -55,7 +66,7 @@ class Encryptor
       decrypt(message, attempt)
     end
   end
-
+end
 ################## user access stuff ends up here. one day i will learn how to divide this into different files :)
 
 password = File.open("encryptor_password.rb", "r")
@@ -90,11 +101,13 @@ password.read
           else
 
 
-              e = Encryptor.new
+
               puts "Enter 1 to encrypt or 2 to decrypt. Enter 'finished' when you are done."          # code to make the program more user friendly
                 selection = gets.chomp.to_i
 
                 if selection == 1
+
+                  e = Encryptor.new
 
                    loop do
                     puts "Enter text to be encrypted > "
@@ -109,6 +122,7 @@ password.read
                 end
 
                 elsif selection == 2
+                  d = Decryptor.new
 
                   loop do
                     puts "Enter text to be decrypted > "
@@ -119,7 +133,7 @@ password.read
                       end
                     puts "Enter rotation number > "
                       rotation = gets.chomp.to_i
-                    puts e.decrypt(string, rotation)
+                    puts d.decrypt(string, rotation)
                   end
 
 
