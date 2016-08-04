@@ -63,7 +63,7 @@ end
 class Application
 
   puts "Enter 1 for encrypting or 2 for decrypting."
-  puts "To exit the program, type 3. "
+  puts "To exit the program, enter 3. "
 
   selection = gets.chomp.to_i
 
@@ -74,14 +74,17 @@ class Application
   end
 
   if selection == 1
-      @encrypting
+      @encrypting                     # offers the user options
   elsif selection == 2
       @decrypting
-  else
+  elsif selection == 3
       puts "Exiting program...done."
       exit
-  end
-
+    else
+      puts "Try again."
+      exit                          # until I know why this keeps going to Encryption
+  end                               # I'll just have it exit if the user enters a
+                                    # number that isn't 1, 2, or 3.
   class Encrypting
 
     string = " "
@@ -99,9 +102,7 @@ class Application
         exit
     end
 
-
-
-  class Decrypting
+  class Decrypting     # for some reason this refuses to load
 
     string = " "
     rotation = " "
