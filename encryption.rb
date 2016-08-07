@@ -60,49 +60,27 @@ end
 
 # The following are ways of accessing the above classes and methods.
 
-class Application
 
-  puts "Enter 1 for encrypting or 2 for decrypting."
-  puts "To exit the program, enter 3. "
+puts "Enter 1 for encrypting or 2 for decrypting."
+puts "To exit the program, enter 3. "
 
-  selection = gets.chomp.to_i
-
-  attr_reader :encrypting, :decrypting
-  def initialize
-    @encrypting = Encrypting.new
-    @decrypting = Decrypting.new
-  end
-
-  if selection == 1
-      @encrypting                     # offers the user options
-  elsif selection == 2
-      @decrypting
-  elsif selection == 3
-      puts "Exiting program...done."
-      exit
-    else
-      puts "Try again."
-      exit                          # until I know why this keeps going to Encryption
-  end                               # I'll just have it exit if the user enters a
-                                    # number that isn't 1, 2, or 3.
-  class Encrypting
-
+selection = gets.chomp.to_i
+if selection == 1
     string = " "
     rotation = " "
+      while string != "finished" && rotation != "finished"
+          puts "Enter text to be encrypted or type 'finished' to exit > "
+            string = gets.chomp.to_s
+          puts "Enter rotation number > "
+            rotation = gets.chomp.to_i
+          e = Encryptor.new
+          puts e.encrypt(string, rotation)
+        end
+          puts "Exiting program...done."
+          exit
+end
 
-    while string != "finished" && rotation != "finished"
-        puts "Enter text to be encrypted or type 'finished' to exit > "
-          string = gets.chomp.to_s
-        puts "Enter rotation number > "
-          rotation = gets.chomp.to_i
-        e = Encryptor.new
-        puts e.encrypt(string, rotation)
-      end
-        puts "Exiting program...done."
-        exit
-    end
-
-  class Decrypting     # for some reason this refuses to load
+if selection == 2
 
     string = " "
     rotation = " "
@@ -117,5 +95,4 @@ class Application
       end
       puts "Exiting program...done."
       exit
-    end
 end
