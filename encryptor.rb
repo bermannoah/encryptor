@@ -1,132 +1,61 @@
-class Encryptor
-  def cipher(rotation)                            # letter hash for ROT-13 cipher
-    characters = (' '..'z').to_a
-    rotated_characters = characters.rotate(rotation)
-    Hash[characters.zip(rotated_characters)]
-   end
+require_relative 'encryption'           # loads encryption code as separate file
+require_relative 'password_code'
 
-   def encrypt_letter(letter, rotation)
-     cipher_for_rotation = cipher(rotation)
-     cipher_for_rotation[letter]
-   end
+class Application
 
-   def encrypt(string, rotation)                  # encrypts a string
-     letters = string.split("")
-     results = letters.collect do |letter|
-       encrypted_letter = encrypt_letter(letter, rotation)
-   end
-     results.join                     # joins encrypted array as a string
-  end
+puts "Enter 1 for encrypting or 2 for decrypting."
+puts "To exit the program, enter 3. "
 
-  def decrypt(string, rotation)                 # decrypts an encrypted string using encrypt
-    x = (0 - rotation).to_i
-    letters = string.split("")
-    decrypted_results = letters.collect do |letter|
-      decrypted_letter = encrypt_letter(letter, x)
-    end
-    decrypted_results.join            # outputs decrypted string
-    end
+selection = gets.chomp.to_i
+  if selection == 1
+      string = " "
+      rotation = " "
+        while string != "finished" && rotation != "finished"
+            puts "Enter text to be encrypted or type 'finished' to exit > "
+              string = gets.chomp.to_s
 
-
-  def encrypt_file(filename, rotation)
-      input = File.open(filename, "r")  # opens file
-      clear_text = input.read           # reads file into cleartext
-      cipher_text = encrypt(clear_text, rotation) # encrypts clear text with rotation parameter
-      output = File.open(filename, "w") # creates file for encrypted text
-      output.write(cipher_text) # writes cipher text to new file
-      output.close   # closes file
-  end
-
-  def decrypt_file(filename, rotation)
-      input = File.open(filename, "r")  # opens file
-      code_language = input.read    # reads gibberish
-      not_code_language = decrypt(code_language, rotation)  # decrypts gibberish
-      what_it_says = File.open(filename, "w") # creates a new file and changes encrypted to decrypted
-      what_it_says.write(not_code_language) # writes decrypted info to new file
-      what_it_says.close  # closes that file
-    end
-
-  def supported_characters
-    (' '..'z').to_a
-  end
-
-  def crack(message)
-    supported_characters.count.times.collect do |attempt|
-      decrypt(message, attempt)
-    end
-  end
-
-################## user access stuff ends up here. one day i will learn how to divide this into different files :)
-
-password = File.open("encryptor_password.rb", "r")
-password.read
-
-
-  if File.zero?(password)         # checks to see if the password file is empty
-    puts "Add a password to use this application > "
-      password_new = gets.chomp                  # asks for and then encrypts a new password
-        security = File.open("encryptor_password.rb", "w")
-        security.write(password_new)
-        security.close
-        e = Encryptor.new
-        e.encrypt_file("encryptor_password.rb", 4096)
-  else                                          # if there IS a password, use this to access encrypt/decrypt
-    puts "Enter password to login > "
-      login = gets.chomp
-        check_pass = File.open("check_pass.rb", "w")
-        check_pass.write(login)
-        check_pass.close
-        e = Encryptor.new
-        e.encrypt_file("check_pass.rb", 4096).to_s
-
-          checker = File.open("check_pass.rb", "r")           # checks to see if password entered matches existing pw
-          original = File.open("encryptor_password.rb", "r")
-          p1 = checker.read.to_s
-          p2 = original.read.to_s
-
-
-          if p1 != p2
-            puts "Incorrect password entry. Try again." # error message if a bad pw is entered.
-          else
-
-
-              e = Encryptor.new
-              puts "Enter 1 to encrypt or 2 to decrypt. Enter 'finished' when you are done."          # code to make the program more user friendly
-                selection = gets.chomp.to_i
-
-                if selection == 1
-
-                   loop do
-                    puts "Enter text to be encrypted > "
-                      string = gets.chomp
-                      if string == "finished"
-                        puts "Exiting...done."            # allows continual encryption
-                        break
-                      end
-                    puts "Enter rotation number > "
-                      rotation = gets.chomp.to_i
-                    puts e.encrypt(string, rotation)
-                end
-
-                elsif selection == 2
-
-                  loop do
-                    puts "Enter text to be decrypted > "
-                      string = gets.chomp
-                      if string == "finished"         # allows continual decryption
-                        puts "Exiting...done."
-                        break
-                      end
-                    puts "Enter rotation number > "
-                      rotation = gets.chomp.to_i
-                    puts e.decrypt(string, rotation)
-                  end
-
-
-                else
-                  puts "Exiting program...done."
-
-                end
+              if string == "finished"
+                puts "Exiting program...done."
+                exit
               end
-            end
+
+            puts "Enter rotation number > "
+              rotation = gets.chomp.to_i
+            e = Encryptor.new
+            puts e.encrypt(string, rotation)
           end
+            puts "Exiting program...done."
+            exit
+
+
+  elsif selection == 2
+
+      string = " "
+      rotation = " "
+
+      while string != "finished" && rotation != "finished"
+        puts "Enter text to be decrypted or type 'finished' to exit > "
+          string = gets.chomp.to_s
+
+          if string == "finished"
+            puts "Exiting program...done."
+            exit
+          end
+
+        puts "Enter rotation number > "
+          rotation = gets.chomp.to_i
+          d = Decryptor.new
+          puts d.decrypt(string, rotation)
+        end
+        puts "Exiting program...done."
+        exit
+
+  elsif selection == 3
+    puts "Exiting program...done."
+    exit
+
+  else
+    puts "Incorrect option entered. Please try again."
+    exit
+  end
+end
